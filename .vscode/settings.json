@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "*.tpp": "cpp",
+        "array": "cpp",
+        "functional": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "*.tcc": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "regex": "cpp",
+        "mongoose.h": "c",
+        "mongoose_config.h": "c",
+        "ssl.h": "c"
+    }
+}
