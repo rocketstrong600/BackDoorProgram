@@ -3,8 +3,8 @@
 
 
 const char* hostname = "jackhammer";
-const char* ssid = "Nuclear_Testing_Facility";
-const char* password = "Marvel2022!";
+const char* ssid = "SSID";
+const char* password = "PASSWORD";
 
 void ev_handler(struct mg_connection *c, int ev, void *ev_data);
 void WSConnect(struct mg_connection *c, int ev, void *ev_data);
