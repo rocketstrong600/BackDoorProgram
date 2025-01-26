@@ -8,12 +8,13 @@
     utils.lib.eachDefaultSystem(system:
       let
         pkgs = import nixpkgs { inherit system; };
-        #python-with-pip = pkgs.python3.withPackages (p: with p; [pip]);
+        python-with-pip = pkgs.python3.withPackages (p: with p; [pip]);
         in {
           devShell = with pkgs; mkShell {
-            buildInputs = [ platformio esptool pip]; 
+            buildInputs = [ platformio esptool python-with-pip]; 
             shellHook = ''
               export PLATFORMIO_CORE_DIR=$PWD/.platformio
+              PYTHONPATH=${python-with-pip}/${python-with-pip.sitePackages}
             '';
           };
         }
