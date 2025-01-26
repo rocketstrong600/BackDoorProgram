@@ -1,14 +1,20 @@
-{ pkgs ? import <nixpkgs> {} }:
-let
-in
-  pkgs.mkShell {
-    buildInputs = [
-      pkgs.platformio
-      # optional: needed as a programmer i.e. for esp32
-      # pkgs.avrdude
-    ];
-    shellHook = ''
-      export PLATFORMIO_CORE_DIR=$PWD/.platformio
-    '';
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    utils.url = "github:numtide/flake-utils";
+  };
 
+  outputs = { self, nixpkgs, utils}:
+    utils.lib.eachDefaultSystem(system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        in {
+          devShell = with pkgs; mkShell {
+            buildInputs = [ platformio ]; 
+            shellHook = ''
+              export PLATFORMIO_CORE_DIR=$PWD/.platformio
+            '';
+          };
+        }
+    );
 }
