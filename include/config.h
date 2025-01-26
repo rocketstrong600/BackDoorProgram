@@ -8,7 +8,7 @@
 #define STEPPER_HOME      27
 
 //Mechanism
-#define PHYSICAL_TRAVEL   190
+#define PHYSICAL_TRAVEL   360
 #define KEEPOUT_DISTANCE  5.0
 
 // Calculation Aid:

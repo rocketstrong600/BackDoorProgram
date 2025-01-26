@@ -8,12 +8,12 @@
     utils.lib.eachDefaultSystem(system:
       let
         pkgs = import nixpkgs { inherit system; };
+        python-with-pip = pkgs.python.withPackages (p: with p; [pip]);
         in {
           devShell = with pkgs; mkShell {
-            buildInputs = [ platformio esptool ]; 
+            buildInputs = [ platformio esptool python-with-pip]; 
             shellHook = ''
               export PLATFORMIO_CORE_DIR=$PWD/.platformio
-              export PYTHONPATH="$PWD/.venv"
             '';
           };
         }
