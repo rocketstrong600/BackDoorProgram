@@ -11,10 +11,10 @@
         python-with-pip = pkgs.python3.withPackages (p: with p; [pip]);
         in {
           devShell = with pkgs; mkShell {
-            buildInputs = [ platformio esptool python-with-pip]; 
+            buildInputs = [ platformio esptool python-with-pip];
             shellHook = ''
               export PLATFORMIO_CORE_DIR=$PWD/.platformio
-              PYTHONPATH=${python-with-pip}/${python-with-pip.sitePackages}
+              export PIP_TARGET=$PWD/.platformio/packages/
             '';
           };
         }

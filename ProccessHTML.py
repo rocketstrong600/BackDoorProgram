@@ -5,6 +5,7 @@ try:
     import minify_html
 except ImportError:
     env.Execute("$PYTHONEXE -m pip install minify-html")
+    import minify_html
 
 # Get absolute paths using the project directory
 project_dir = env['PROJECT_DIR']
