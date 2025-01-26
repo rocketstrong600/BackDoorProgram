@@ -8,7 +8,7 @@
     utils.lib.eachDefaultSystem(system:
       let
         pkgs = import nixpkgs { inherit system; };
-        python-with-pip = pkgs.python.withPackages (p: with p; [pip]);
+        python-with-pip = pkgs.python3.withPackages (p: with p; [pip]);
         in {
           devShell = with pkgs; mkShell {
             buildInputs = [ platformio esptool python-with-pip]; 
