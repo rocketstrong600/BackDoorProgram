@@ -10,9 +10,10 @@
         pkgs = import nixpkgs { inherit system; };
         in {
           devShell = with pkgs; mkShell {
-            buildInputs = [ platformio ]; 
+            buildInputs = [ platformio esptool ]; 
             shellHook = ''
               export PLATFORMIO_CORE_DIR=$PWD/.platformio
+              export PYTHONPATH="$PWD/.venv"
             '';
           };
         }
