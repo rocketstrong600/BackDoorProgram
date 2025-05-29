@@ -1,6 +1,9 @@
+import os
 Import("env")
 
-import os
+# include toolchain paths
+env.Replace(COMPILATIONDB_INCLUDE_TOOLCHAIN=True)
+
 try:
     import minify_html
 except ImportError:

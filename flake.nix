@@ -11,10 +11,11 @@
         python-with-pip = pkgs.python3.withPackages (p: with p; [pip]);
         in {
           devShell = with pkgs; mkShell {
-            buildInputs = [ platformio esptool python-with-pip];
+            buildInputs = [ platformio esptool python-with-pip clang-tools ccls vscode-langservers-extracted python313Packages.python-lsp-server ];
             shellHook = ''
               export PLATFORMIO_CORE_DIR=$PWD/.platformio
               export PIP_TARGET=$PWD/.platformio/packages/
+              exec fish
             '';
           };
         }

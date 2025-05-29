@@ -3,9 +3,9 @@
 
 // Pin Definitions
 #define STEPPER_PULSE     33
-#define STEPPER_DIR       25
+#define STEPPER_DIR       34
 #define STEPPER_ENABLE    -1
-#define STEPPER_HOME      27
+#define STEPPER_HOME      36
 
 //Mechanism
 #define PHYSICAL_TRAVEL   360

@@ -17,6 +17,8 @@
 
 #include "index_html.h"
 
+
+
 //StrokeEngine
 static motorProperties servoMotor {
   .maxSpeed = MAX_SPEED,                // Maximum speed the system can go in mm/s
@@ -27,20 +29,20 @@ static motorProperties servoMotor {
   .enableActiveLow = true,              // Polarity of the enable signal      
   .stepPin = STEPPER_PULSE,             // Pin of the STEP signal
   .directionPin = STEPPER_DIR,          // Pin of the DIR signal
-  .enablePin = STEPPER_ENABLE,           // Pin of the enable signal
+  .enablePin = STEPPER_ENABLE,          // Pin of the enable signal
 };
 
 static machineGeometry strokingMachine = {
   .physicalTravel = PHYSICAL_TRAVEL,            // Real physical travel from one hard endstop to the other
-  .keepoutBoundary = KEEPOUT_DISTANCE             // Safe distance the motion is constrained to avoiding crashes
+  .keepoutBoundary = KEEPOUT_DISTANCE           // Safe distance the motion is constrained to avoiding crashes
 };
 
 // Configure Homing Procedure
 static endstopProperties endstop = {
   .homeToBack = true,                 // Endstop sits at the rear of the machine
-  .activeLow = false,                  // switch is wired active low
-  .endstopPin = STEPPER_HOME,        // Pin number
-  .pinMode = INPUT_PULLDOWN          // pinmode INPUT with external pull-up resistor
+  .activeLow = true,                  // switch is wired active low
+  .endstopPin = STEPPER_HOME,         // Pin number
+  .pinMode = INPUT                    // pinmode INPUT with external pull-up resistor
 };
 
 static String stringState[] = {
@@ -55,11 +57,29 @@ StrokeEngine Stroker;
 
 struct mg_mgr mgr;
 
+struct UserLimit {
+    int min;
+    int max;
+};
+
+struct StrokerUserLimits {
+    UserLimit speed;
+    UserLimit depth;
+    UserLimit stroke;
+    UserLimit sensation;
+};
+
+StrokerUserLimits strokerUserLimits;
+
 void setup() {
     // Start Serial For Debug
     Serial.begin(9600);
-
     delay(1000);
+
+    strokerUserLimits.speed = {0, 200};
+    strokerUserLimits.depth = {0, 200};
+    strokerUserLimits.stroke = {0, 200};
+    strokerUserLimits.sensation = {-100, 100};
 
     Stroker.begin(&strokingMachine, &servoMotor);
 
@@ -72,17 +92,19 @@ void setup() {
         delay(1000);
         Serial.println("Connecting to WiFi..");
     }
+
+    
     Serial.println("Connected to WiFi");
     
     mg_mgr_init(&mgr);
 
     // Create HTTP listener
     mg_http_listen(&mgr, "http://0.0.0.0:80", ev_handler, NULL);
-
+    pinMode(STEPPER_HOME, INPUT);
 }
 
 void loop() {
-    mg_mgr_poll(&mgr, 1000);
+    mg_mgr_poll(&mgr, 5000);
 }
 
 void ev_handler(struct mg_connection *c, int ev, void *ev_data) {
@@ -116,9 +138,17 @@ void WSConnect(struct mg_connection *c, int ev, void *ev_data) {
 
     StrokerState["type"] = "batch";
     StrokerState["speed"] = Stroker.getSpeed();
+    StrokerState["speedMin"] = strokerUserLimits.speed.min;
+    StrokerState["speedMax"] = strokerUserLimits.speed.max;
     StrokerState["depth"] = Stroker.getDepth();
+    StrokerState["depthMin"] = strokerUserLimits.depth.min;
+    StrokerState["depthMax"] = strokerUserLimits.depth.max;
     StrokerState["stroke"] = Stroker.getStroke();
+    StrokerState["strokeMin"] = strokerUserLimits.stroke.min;
+    StrokerState["strokeMax"] = strokerUserLimits.stroke.max;
     StrokerState["sensation"] = Stroker.getSensation();
+    StrokerState["sensationMin"] = strokerUserLimits.sensation.min;
+    StrokerState["sensationMax"] = strokerUserLimits.sensation.max;
 
     switch (Stroker.getPattern())
     {
@@ -222,6 +252,47 @@ void ProcessCommand(struct mg_connection *c, JsonDocument doc) {
             Stroker.setSensation(sensation, immediate);
             Serial.printf("Setting Sensation: %.2f\n", sensation);
         }
+
+    }
+
+    if (doc["type"] == "speedMin") {
+        int value = doc["value"];
+        strokerUserLimits.speed.min = value;
+    }
+
+    if (doc["type"] == "speedMax") {
+        int value = doc["value"];
+        strokerUserLimits.speed.max = value;
+    }
+    
+    if (doc["type"] == "depthMin") {
+        int value = doc["value"];
+        strokerUserLimits.depth.min = value;
+    }
+
+    if (doc["type"] == "depthMax") {
+        int value = doc["value"];
+        strokerUserLimits.depth.max = value;
+    }
+    
+    if (doc["type"] == "strokeMin") {
+        int value = doc["value"];
+        strokerUserLimits.stroke.min = value;
+    }
+
+    if (doc["type"] == "strokeMax") {
+        int value = doc["value"];
+        strokerUserLimits.stroke.max = value;
+    }
+
+    if (doc["type"] == "sensationMin") {
+        int value = doc["value"];
+        strokerUserLimits.sensation.min = value;
+    }
+
+    if (doc["type"] == "sensationMax") {
+        int value = doc["value"];
+        strokerUserLimits.sensation.max = value;
     }
 
     if (doc["type"] == "home") {

@@ -1,643 +1,763 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/686091936700039188/1289937657563975710/jackhammer.ico?ex=66faa38f&is=66f9520f&hm=ab51b322635275c066da7228086397afe89fef76fabea75e317f13f024cd8529&">
-        <title>Fucky Wucky</title>
-        <style>
-            html {
-                overscroll-behavior: none
-            }
 
-            html,
-            body {
-                margin: 0;
-                height: 100dvh;
-                overflow-y: hidden;
-            }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+  <link rel="icon" type="image/x-icon"
+    href="https://cdn.discordapp.com/attachments/686091936700039188/1289937657563975710/jackhammer.ico?ex=66faa38f&is=66f9520f&hm=ab51b322635275c066da7228086397afe89fef76fabea75e317f13f024cd8529&">
+  <title>Backdoor Machine</title>
+  <style>
+    html {
+      overscroll-behavior: none
+    }
 
-            body {
-                background-color: #0A000F;
-                color: #FEDCFC
-            }
+    html,
+    body {
+      margin: 0;
+      height: 100dvh;
+      overflow-y: hidden;
+    }
 
-            button {
-                appearance: button;
-                background-color: #FF00A4;
-                border: solid transparent;
-                border-radius: 16px;
-                border-width: 0 0 4px;
-                box-sizing: border-box;
-                color: #FEDCFC;
-                cursor: pointer;
-                display: inline-block;
-                font-family: din-round, sans-serif;
-                font-size: 15px;
-                font-weight: 700;
-                letter-spacing: .8px;
-                line-height: 20px;
-                margin: 0;
-                outline: none;
-                overflow: visible;
-                padding: 13px 16px;
-                text-align: center;
-                text-transform: uppercase;
-                touch-action: manipulation;
-                transform: translateZ(0);
-                transition: filter .2s;
-                user-select: none;
-                -webkit-user-select: none;
-                vertical-align: middle;
-                white-space: nowrap;
-                width: 100%;
-            }
+    body {
+      background-color: #0A000F;
+      color: #FEDCFC
+    }
 
-            button:after {
-                background-clip: padding-box;
-                background-color: #FA2DB1;
-                border: solid transparent;
-                border-radius: 16px;
-                border-width: 0 0 4px;
-                bottom: -4px;
-                content: "";
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 0;
-                z-index: -1;
-            }
+    button {
+      appearance: button;
+      background-color: #FF00A4;
+      border: solid transparent;
+      border-radius: 16px;
+      border-width: 0 0 4px;
+      box-sizing: border-box;
+      color: #FEDCFC;
+      cursor: pointer;
+      display: inline-block;
+      font-family: din-round, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      line-height: 20px;
+      margin: 0;
+      outline: none;
+      overflow: visible;
+      padding: 13px 16px;
+      text-align: center;
+      text-transform: uppercase;
+      touch-action: manipulation;
+      transform: translateZ(0);
+      transition: filter .2s;
+      user-select: none;
+      -webkit-user-select: none;
+      vertical-align: middle;
+      white-space: nowrap;
+      width: 100%;
+    }
 
-            button,
-            button:focus {
-                user-select: auto;
-            }
+    button:after {
+      background-clip: padding-box;
+      background-color: #FA2DB1;
+      border: solid transparent;
+      border-radius: 16px;
+      border-width: 0 0 4px;
+      bottom: -4px;
+      content: "";
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: -1;
+    }
 
-            button:hover:not(:disabled) {
-                filter: brightness(1.1);
-                -webkit-filter: brightness(1.1);
-            }
+    button,
+    button:focus {
+      user-select: auto;
+    }
 
-            button:disabled {
-                cursor: auto;
-            }
+    button:hover:not(:disabled) {
+      filter: brightness(1.1);
+      -webkit-filter: brightness(1.1);
+    }
 
-            button:active {
-                border-width: 4px 0 0;
-                background: none;
-            }
+    button:disabled {
+      cursor: auto;
+    }
 
-            .vrange {
-                -webkit-appearance: none;
-                appearance: none;
-                writing-mode: vertical-lr;
-                direction: rtl;
-                border-radius: 16px;
-                flex-grow: 1;
-                width: 60px;
-                background: #FEDCFC;
-                outline: none;
-                -webkit-transition: .2s;
-                transition: opacity .2s;
-                pointer-events: none;
-            }
+    button:active {
+      border-width: 4px 0 0;
+      background: none;
+    }
 
-            .vrange::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                border-radius: 10px;
-                width: 65px;
-                height: 65px;
-                background: #AD0073;
-                cursor: pointer;
-                pointer-events: auto;
-            }
+    .vrange {
+      -webkit-appearance: none;
+      appearance: none;
+      writing-mode: vertical-lr;
+      direction: rtl;
+      border-radius: 16px;
+      flex-grow: 1;
+      width: 60px;
+      background: #FEDCFC;
+      outline: none;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+      pointer-events: none;
+    }
 
-            .vrange::-moz-range-thumb {
-                width: 65px;
-                height: 65px;
-                border-radius: 10px;
-                background: #AD0073;
-                cursor: pointer;
-                pointer-events: auto;
-            }
+    .vrange::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 10px;
+      width: 65px;
+      height: 65px;
+      background: #AD0073;
+      cursor: pointer;
+      pointer-events: auto;
+    }
 
-            .vrange::-webkit-slider-thumb:active {
-                width: 70px;
-                height: 70px;
-            }
+    .vrange::-moz-range-thumb {
+      width: 65px;
+      height: 65px;
+      border-radius: 10px;
+      background: #AD0073;
+      cursor: pointer;
+      pointer-events: auto;
+    }
 
-            .vrange::-moz-range-thumb:active {
-                width: 70px;
-                height: 70px;
-            }
+    .vrange::-webkit-slider-thumb:active {
+      width: 70px;
+      height: 70px;
+    }
 
-            .max {
-                text-align: center;
-                width: 60px;
-                border-radius: 10px;
+    .vrange::-moz-range-thumb:active {
+      width: 70px;
+      height: 70px;
+    }
 
-                input {
-                    text-align: center;
-                }
+    .max {
+      text-align: center;
+      width: 60px;
+      border-radius: 10px;
 
-                background: #FEDCFC;
-                height: 40px;
-                font-size: 20px;
-                color: #0A000F;
-            }
+      input {
+        text-align: center;
+      }
 
-            .Panel {
-                display: flex;
-                align-items: center;
-                padding: 5px 10px;
-            }
+      background: #FEDCFC;
+      height: 40px;
+      font-size: 20px;
+      color: #0A000F;
+    }
 
-            .divider {
-                width: 10px;
-                height: auto;
-                display: inline-block;
-            }
+    .Panel {
+      display: flex;
+      align-items: center;
+      padding: 5px 10px;
+    }
 
-            .wdropdown {
-                width: 100%;
-                padding: 13px 16px;
-                background-color: #FEDCFC;
-                color: #0A000F;
-                font-size: 15px;
-                font-weight: 700;
-                letter-spacing: .8px;
-            }
+    .divider {
+      width: 10px;
+      height: auto;
+      display: inline-block;
+    }
 
-            .Panels {
-                display: grid;
-                grid-template-columns: repeat(2, 100%);
-                will-change: transform;
-                align-content: top;
-                overflow-x: auto;
-                overflow-y: hidden;
-                scroll-snap-coordinate: 0 0;
-                scroll-snap-points-x: repeat(100%);
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                height: 100dvh;
-                padding: 0;
-            }
+    .wdropdown {
+      width: 100%;
+      padding: 13px 16px;
+      background-color: #FEDCFC;
+      color: #0A000F;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .8px;
+    }
 
-            section {
-                height: 100dvh;
-                scroll-snap-align: start;
-                padding: 0;
-            }
+    .Panels {
+      display: grid;
+      grid-template-columns: repeat(2, 100%);
+      will-change: transform;
+      align-content: top;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-coordinate: 0 0;
+      scroll-snap-points-x: repeat(100%);
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      height: 100dvh;
+      padding: 0;
+    }
 
-            .SBContainer {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-evenly;
-            }
+    section {
+      height: 100dvh;
+      scroll-snap-align: start;
+      padding: 0;
+    }
 
-            .SBRow {
-                text-align: center;
-                flex-shrink: 1;
-            }
+    .SBContainer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
 
-            .SBRow .max {
-                margin-bottom: 10px;
-            }
+    .SBRow {
+      text-align: center;
+      flex-shrink: 1;
+    }
 
-            .SBExpand {
-                flex-grow: 1;
-                display: flex;
-                text-align: center;
-                flex-direction: column;
-                margin: auto;
-            }
+    .SBRow .max {
+      margin-bottom: 10px;
+    }
 
-            .SBColumn {
-                display: flex;
-                flex-grow: 1;
-                flex-direction: column;
-                justify-content: center;
-            }
+    .SBExpand {
+      flex-grow: 1;
+      display: flex;
+      text-align: center;
+      flex-direction: column;
+      margin: auto;
+    }
 
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
+    .SBColumn {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-            input[type=number] {
-                -moz-appearance: textfield;
-            }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 
-            h2 {
-                margin: 2px;
-            }
-            /* The switch - the box around the slider */
-            .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-            }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
 
-            /* Hide default HTML checkbox */
-            .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-            }
+    h2 {
+      margin: 2px;
+    }
 
-            /* The slider */
-            .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #FEDCFC;
-            -webkit-transition: .4s;
-            transition: .4s;
-            }
+    /* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
 
-            .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: #FF00A4;
-            -webkit-transition: .4s;
-            transition: .4s;
-            }
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-            input:checked + .slider {
-            background-color: #FF00A4;
-            }
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #FEDCFC;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
 
-            input:checked + .slider::before {
-                background-color: #FEDCFC;
-            }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: #FF00A4;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
 
-            input:focus + .slider {
-            box-shadow: 0 0 1px #FF00A4;
-            }
+    input:checked+.slider {
+      background-color: #FF00A4;
+    }
 
-            input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-            }
+    input:checked+.slider::before {
+      background-color: #FEDCFC;
+    }
 
-            /* Rounded sliders */
-            .slider.round {
-            border-radius: 34px;
-            }
+    input:focus+.slider {
+      box-shadow: 0 0 1px #FF00A4;
+    }
 
-            .slider.round:before {
-            border-radius: 50%;
-            } 
-        </style>
-    </head>
-    <body>
-        <div class="Panels">
-            <section class="SlidersPanel">
-                <div class="SBContainer">
-                    <div class="SBColumn">
-                        <div class="SBRow">
-                            <h2>Speed</h2>
-                        </div>
-                        <div class="SBRow SBExpand">
-                            <input class="vrange" id="speed" min="0" max="200" value="0" step="0.25" type="range" />
-                        </div>
-                        <div class="SBRow">
-                            <h2 id="speedValue"></h2>
-                        </div>
-                        <div class="SBRow">
-                            <input class="max" id="speedMax" min="0" max="3000" value="200" type="number" />
-                            <input class="max" id="speedMin" min="0" max="3000" value="0" type="number" />
-                        </div>
-                    </div>
-                    <div class="SBColumn">
-                        <div class="SBRow">
-                            <h2>Depth</h2>
-                        </div>
-                        <div class="SBRow SBExpand">
-                            <input class="vrange" id="depth" min="0" max="200" value="0" type="range" />
-                        </div>
-                        <div class="SBRow">
-                            <h2 id="depthValue"></h2>
-                        </div>
-                        <div class="SBRow">
-                            <input class="max" id="depthMax" min="0" max="280" value="200" type="number" />
-                            <input class="max" id="depthMin" min="0" max="280" value="0" type="number" />
-                        </div>
-                    </div>
-                    <div class="SBColumn">
-                        <div class="SBRow">
-                            <h2>Stroke</h2>
-                        </div>
-                        <div class="SBRow SBExpand">
-                            <input class="vrange" id="stroke" min="0" max="200" value="0" type="range" />
-                        </div>
-                        <div class="SBRow">
-                            <h2 id="strokeValue"></h2>
-                        </div>
-                        <div class="SBRow">
-                            <input class="max" id="strokeMax" min="0" max="280" value="200" type="number" />
-                            <input class="max" id="strokeMin" min="0" max="280" value="0" type="number" />
-                        </div>
-                    </div>
-                    <div class="SBColumn">
-                        <div class="SBRow">
-                            <h2>Sensation</h2>
-                        </div>
-                        <div class="SBRow SBExpand">
-                            <input class="vrange" id="sensation" min="-100" max="100" value="0" step="0.25" type="range" />
-                        </div>
-                        <div class="SBRow">
-                            <h2 id="sensationValue"></h2>
-                        </div>
-                        <div class="SBRow">
-                            <input class="max" id="sensationMax" min="0" max="1000" value="100" step="0.25" type="number" />
-                            <input class="max" id="sensationMin" min="0" max="-1000" value="-100" step="0.25" type="number" />
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="ExrasPanel">
-                <select class="wdropdown" name="pattern" id="pattern">
-                    <option value="Depth">Depth</option>
-                    <option value="FancyDepth">Fancy Depth</option>
-                    <option value="SimpleStroke">Simple Stroke</option>
-                    <option value="TeasingPounding">Teasing Pounding</option>
-                    <option value="RoboStroke">Robo Stroke</option>
-                    <option value="HalfnHalf">Half n Half</option>
-                    <option value="Deeper">Deeper</option>
-                    <option value="StopNGo">Stop And Go</option>
-                    <option value="Insist">Insist</option>
-                    <option value="JackHammer">Jack Hammer</option>
-                    <option value="StrokeNibbler">Stroke Nibbler</option>
-                </select>
-                <div class="Panel">
-                    <button id="PatternSet">SET PATERN</button>
-                    <div class="divider"></div>
-                    <div style="text-align: center;">
-                        <span>instantaneous</span>
-                        <label class="switch">
-                            <input id="ImmediateSwitch" type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="Panel">
-                    <button id="Start">START</button>
-                    <div class="divider"></div>
-                    <button id="Stop">STOP</button>
-                </div>
-                <div class="Panel">
-                    <button id="Disable">DISABLE</button>
-                </div>
-                <div class="Panel">
-                    <button id="Home">HOME</button>
-                    <div class="divider"></div>
-                    <button id="fullscreen-view">FULLSCREEN</button>
-                </div>
-                <div class="Panel">
-                    <button onClick="window.location.reload();">Refresh</button>
-                    <div class="divider"></div>
-                    <div style="min-width:170px;display:block;">
-                        <div style="display: inline-flex;"><span>State:</span><div class="divider"></div><span id="StateMessage" >Unknown</span></div>
-                        <div style="display: inline-flex;"><span>Status:</span><div class="divider"></div><span id="StatusMessage" >Disconnected</span></div>
-                    </div>
-                </div>
-            </section>
+    input:checked+.slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="Panels">
+    <section class="SlidersPanel">
+      <div class="SBContainer">
+        <div class="SBColumn">
+          <div class="SBRow">
+            <h2>Speed</h2>
+          </div>
+          <div class="SBRow SBExpand">
+            <input class="vrange" id="speed" min="0" max="200" value="0" step="0.25" type="range" />
+          </div>
+          <div class="SBRow">
+            <h2 id="speedValue"></h2>
+          </div>
+          <div class="SBRow">
+            <input class="max" id="speedMax" min="0" max="3000" value="200" type="number" />
+            <input class="max" id="speedMin" min="0" max="3000" value="0" type="number" />
+          </div>
         </div>
-        <script>
-            const socket = new WebSocket('ws://' + window.location.host + '/ws');
+        <div class="SBColumn">
+          <div class="SBRow">
+            <h2>Depth</h2>
+          </div>
+          <div class="SBRow SBExpand">
+            <input class="vrange" id="depth" min="0" max="200" value="0" type="range" />
+          </div>
+          <div class="SBRow">
+            <h2 id="depthValue"></h2>
+          </div>
+          <div class="SBRow">
+            <input class="max" id="depthMax" min="0" max="280" value="200" type="number" />
+            <input class="max" id="depthMin" min="0" max="280" value="0" type="number" />
+          </div>
+        </div>
+        <div class="SBColumn">
+          <div class="SBRow">
+            <h2>Stroke</h2>
+          </div>
+          <div class="SBRow SBExpand">
+            <input class="vrange" id="stroke" min="0" max="200" value="0" type="range" />
+          </div>
+          <div class="SBRow">
+            <h2 id="strokeValue"></h2>
+          </div>
+          <div class="SBRow">
+            <input class="max" id="strokeMax" min="0" max="280" value="200" type="number" />
+            <input class="max" id="strokeMin" min="0" max="280" value="0" type="number" />
+          </div>
+        </div>
+        <div class="SBColumn">
+          <div class="SBRow">
+            <h2>Sensation</h2>
+          </div>
+          <div class="SBRow SBExpand">
+            <input class="vrange" id="sensation" min="-100" max="100" value="0" step="0.25" type="range" />
+          </div>
+          <div class="SBRow">
+            <h2 id="sensationValue"></h2>
+          </div>
+          <div class="SBRow">
+            <input class="max" id="sensationMax" min="0" max="1000" value="100" step="0.25" type="number" />
+            <input class="max" id="sensationMin" min="0" max="-1000" value="-100" step="0.25" type="number" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="ExrasPanel">
+      <select class="wdropdown" name="pattern" id="pattern">
+        <option value="Depth">Depth</option>
+        <option value="FancyDepth">Fancy Depth</option>
+        <option value="SimpleStroke">Simple Stroke</option>
+        <option value="TeasingPounding">Teasing Pounding</option>
+        <option value="RoboStroke">Robo Stroke</option>
+        <option value="HalfnHalf">Half n Half</option>
+        <option value="Deeper">Deeper</option>
+        <option value="StopNGo">Stop And Go</option>
+        <option value="Insist">Insist</option>
+        <option value="JackHammer">Jack Hammer</option>
+        <option value="StrokeNibbler">Stroke Nibbler</option>
+      </select>
+      <div class="Panel">
+        <button id="PatternSet">SET PATERN</button>
+        <div class="divider"></div>
+        <div style="text-align: center;">
+          <span>instantaneous</span>
+          <label class="switch">
+            <input id="ImmediateSwitch" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+      <div class="Panel">
+        <button id="Start">START</button>
+        <div class="divider"></div>
+        <button id="Stop">STOP</button>
+      </div>
+      <div class="Panel">
+        <button id="Disable">DISABLE</button>
+      </div>
+      <div class="Panel">
+        <button id="Home">HOME</button>
+        <div class="divider"></div>
+        <button id="fullscreen-view">FULLSCREEN</button>
+      </div>
+      <div class="Panel">
+        <button onClick="window.location.reload();">Refresh</button>
+        <div class="divider"></div>
+        <div style="min-width:170px;display:block;">
+          <div style="display: inline-flex;"><span>State:</span>
+            <div class="divider"></div><span id="StateMessage">Unknown</span>
+          </div>
+          <div style="display: inline-flex;"><span>Status:</span>
+            <div class="divider"></div><span id="StatusMessage">Disconnected</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
 
-            var viewFullScreen = document.getElementById("fullscreen-view");
-            viewFullScreen.onclick = function (){
-                var docElm = document.documentElement;
-                if (docElm.requestFullscreen) {
-                    docElm.requestFullscreen().then(() => screen.orientation.lock("portrait"));
-                } else if (docElm.msRequestFullscreen) {
-                    docElm.msRequestFullscreen().then(() => screen.orientation.lock("portrait"));
-                } else if (docElm.mozRequestFullScreen) {
-                    docElm.mozRequestFullScreen().then(() => screen.orientation.lock("portrait"));
-                } else if (docElm.webkitRequestFullScreen) {
-                    docElm.webkitRequestFullScreen().then(() => screen.orientation.lock("portrait"));
-                }
-            }
+    // -- Config --
+    const MAX_RECONNECT_ATTEMPTS = 10;
+    const RECONNECT_DELAY = 5000; // 5 seconds
+    const DEBOUNCE_TIME = 60; // 60MS
+    const HEARTBEAT_INTERVAL = 3000;
 
-            var StatusMessage = document.getElementById("StatusMessage");
-            var StateMessage = document.getElementById("StateMessage");
-            var IsAlive = false;
-            let heartbeatInterval;
+    // -- Document Elements --
+    let speed = document.getElementById("speed");
+    let speedMax = document.getElementById("speedMax");
+    let speedMin = document.getElementById("speedMin");
+    let speedValue = document.getElementById("speedValue");
 
-            function proccessBatch(data) {
-                var speed = document.getElementById("speed");
-                var speedValue = document.getElementById("speedValue");
-                speed.value = data.speed;
-                speedValue.innerHTML = data.speed;
+    let depth = document.getElementById("depth");
+    let depthMax = document.getElementById("depthMax");
+    let depthMin = document.getElementById("depthMin");
+    let depthValue = document.getElementById("depthValue");
 
-                var depth = document.getElementById("depth");
-                var depthValue = document.getElementById("depthValue");
-                depth.value = data.depth;
-                depthValue.innerHTML = data.depth;
+    let stroke = document.getElementById("stroke");
+    let strokeMax = document.getElementById("strokeMax");
+    let strokeMin = document.getElementById("strokeMin");
+    let strokeValue = document.getElementById("strokeValue");
 
-                var stroke = document.getElementById("stroke");
-                var strokeValue = document.getElementById("strokeValue");
-                stroke.value = data.stroke;
-                strokeValue.innerHTML = data.stroke;
+    let sensation = document.getElementById("sensation");
+    let sensationMax = document.getElementById("sensationMax");
+    let sensationMin = document.getElementById("sensationMin");
+    let sensationValue = document.getElementById("sensationValue");
 
-                var sensation = document.getElementById("sensation");
-                var sensationValue = document.getElementById("sensationValue");
-                sensation.value = data.sensation;
-                sensation.innerHTML = data.sensation;
+    let patternSelector = document.getElementById("pattern");
+    let patternSetButton = document.getElementById("PatternSet");
 
-                var pattern = document.getElementById("pattern");
-                pattern.value = data.pattern;
-                pattern.dispatchEvent(new Event("change"));
+    let immediateSwitch = document.getElementById("ImmediateSwitch");
 
-                StateMessage.innerHTML = data.state;
-            }
+    let homeButton = document.getElementById("Home");
+    let startButton = document.getElementById("Start");
+    let stopButton = document.getElementById("Stop");
+    let disableButton = document.getElementById("Disable");
+    let viewFullScreen = document.getElementById("fullscreen-view");
 
-            socket.onmessage = function(event) {
-                StatusMessage.innerHTML = "Connected";
-                IsAlive = true;
-                try {
-                    console.log('Message from Machine:', event.data);
-                    const Machinedata = JSON.parse(event.data);
+    let StatusMessage = document.getElementById("StatusMessage");
+    let StateMessage = document.getElementById("StateMessage");
 
-                    if (Machinedata.type == "batch") {
-                        proccessBatch(Machinedata);
-                    }
+    // -- Dom Initial Values --
+    speedValue.innerHTML = speed.value;
+    depthValue.innerHTML = depth.value;
+    strokeValue.innerHTML = stroke.value;
+    sensationValue.innerHTML = sensation.value;
 
-                    if (Machinedata.type == "alive") {
-                        //console.log('Got Alive Message')
-                        StateMessage.innerHTML = Machinedata.state;
-                    }
+    // -- Global Variables --
+    let socket;
+    let heartbeatInterval;
+    let debounceTimeout;
+    let IsAlive = false;
+    let reconnectAttempts = 0;
 
-                } catch (e) {
-                    console.error('Invalid JSON');
-                }
-            }
 
-            function startHeartbeat() {
-                heartbeatInterval = setInterval(() => {
-                    if (socket.readyState === WebSocket.OPEN && IsAlive == true) {
-                        IsAlive = false;
-                        sendUpdate("alive", "check", false);
-                    } else {
-                        stopHeartbeat(); // Stop heartbeat if WebSocket is not open
-                        StatusMessage.innerHTML = "Disconnected";
-                        StateMessage.innerHTML = "Unknown";
-                        socket.close();
-                    }
-                }, 3000); // Ping every 3 seconds
-            }
 
-            // Stop heartbeat
-            function stopHeartbeat() {
-                clearInterval(heartbeatInterval);
-            }
-            
-            socket.onopen = function(event) {
-                StatusMessage.innerHTML = "Connected";
-                IsAlive = true;
-                startHeartbeat();
-            }
+    function initSocket() {
+      StatusMessage.innerHTML = "Connecting";
+      socket = new WebSocket('ws://' + window.location.host + '/ws');
 
-            socket.onclose = function(event) {
-                StatusMessage.innerHTML = "Disconnected";
-                StateMessage.innerHTML = "Unknown"
-                IsAlive = false;
-            }
+      socket.onopen = function (event) {
+        StatusMessage.innerHTML = "Connected";
+        reconnectAttempts = 0;
+        startHeartbeat();
+      };
 
-            socket.onerror = function(even) {
-                StatusMessage.innerHTML = "Error";
-            }
+      socket.onmessage = function (event) {
+        IsAlive = true;
+        try {
+          console.log('Message from Machine:', event.data);
+          const Machinedata = JSON.parse(event.data);
 
-            let debounceTimeout;
-            // Function to send WebSocket message
-            function sendUpdate(type, value, immediate) {
-                const message = JSON.stringify({
-                    type: type,
-                    value: value,
-                    immediate: immediate
-                });
-                socket.send(message);
-            }
+          if (Machinedata.type == "batch") {
+            proccessBatch(Machinedata);
+          }
 
-            function debounceUpdate(type, value, immediate) {
-                clearTimeout(debounceTimeout);
-                debounceTimeout = setTimeout(() => {
-                    sendUpdate(type, value, immediate);
-                }, 60); // Delay of 60ms (adjustable)
-            }
+          if (Machinedata.type == "alive") {
+            //console.log('Got Alive Message')
+            StateMessage.innerHTML = Machinedata.state;
+          }
 
-            var immediateSwitch = document.getElementById("ImmediateSwitch");
+        } catch (e) {
+          console.error('Invalid JSON');
+        }
+      };
 
-            var speed = document.getElementById("speed");
-            var speedMax = document.getElementById("speedMax");
-            var speedMin = document.getElementById("speedMin")
-            var speedValue = document.getElementById("speedValue");
-            speedValue.innerHTML = speed.value;
-            speedMax.onchange = function() {
-                speed.setAttribute("max", speedMax.value);
-            }
-            speedMin.onchange = function() {
-                speed.setAttribute("min", speedMin.value);
-            }
-            speed.oninput = function() {
-                speedValue.innerHTML = this.value;
-                debounceUpdate("speed", this.value, immediateSwitch.checked);
-            }
+      socket.onclose = function (event) {
+        StatusMessage.innerHTML = "Disconnected";
+        StateMessage.innerHTML = "Unknown";
+        IsAlive = false;
+        stopHeartbeat();
 
-            var depth = document.getElementById("depth");
-            var depthMax = document.getElementById("depthMax");
-            var depthMin = document.getElementById("depthMin");
-            var depthValue = document.getElementById("depthValue");
-            depthValue.innerHTML = depth.value;
-            depthMax.onchange = function() {
-                depth.setAttribute("max", depthMax.value);
-            }
-            depthMin.onchange = function() {
-                depth.setAttribute("min", depthMin.value);
-            }
-            depth.oninput = function() {
-                depthValue.innerHTML = this.value;
-                debounceUpdate("depth", this.value, immediateSwitch.checked);
-            }
+        console.log("Socket closed due to " + event.reason);
+        if (event.code == 1000 && event.reason == "Page unloading") {
+          console.log("Socket closed due to page unloading.");
+          return;
+        }
 
-            var stroke = document.getElementById("stroke");
-            var strokeMax = document.getElementById("strokeMax");
-            var strokeMin = document.getElementById("strokeMin");
-            var strokeValue = document.getElementById("strokeValue");
-            strokeValue.innerHTML = stroke.value;
-            strokeMax.onchange = function() {
-                stroke.setAttribute("max", strokeMax.value);
-            }
-            strokeMin.onchange = function() {
-                stroke.setAttribute("min", strokeMin.value);
-            }
-            stroke.oninput = function() {
-                strokeValue.innerHTML = this.value;
-                debounceUpdate("stroke", this.value, immediateSwitch.checked);
-            }
+        if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+          StatusMessage.innerHTML = "";
+          reconnectAttempts++;
+          setTimeout(initSocket, RECONNECT_DELAY);
+          StatusMessage.innerHTML = "Reconnecting"
+          console.log("Socket Reconnecting")
+        } else {
+          StatusMessage.innerHTML = "Disconnected";
+          console.log("Socket closed and max reconnect tries reached")
+        }
+      };
 
-            var sensation = document.getElementById("sensation");
-            var sensationMax = document.getElementById("sensationMax");
-            var sensationMin = document.getElementById("sensationMin");
-            var sensationValue = document.getElementById("sensationValue");
-            sensationValue.innerHTML = sensation.value;
-            sensationMax.onchange = function() {
-                sensation.setAttribute("max", sensationMax.value);
-            }
-            sensationMin.onchange = function() {
-                sensation.setAttribute("min", sensationMin.value);
-            }
-            sensation.oninput = function() {
-                sensationValue.innerHTML = this.value;
-                debounceUpdate("sensation", this.value, immediateSwitch.checked);
-            }
+      socket.onerror = function (even) {
+        StatusMessage.innerHTML = "Error";
+        console.error("WebSocket Error:", error);
+      };
+    }
 
-            var patternSelector = document.getElementById("pattern");
-            var patternSetButton = document.getElementById("PatternSet");
-            patternSetButton.onclick = function() {
-                sendUpdate("pattern", patternSelector.value, immediateSwitch.checked);
-                sendUpdate("speed", speed.value, immediateSwitch.checked);
-                sendUpdate("depth", depth.value, immediateSwitch.checked);
-                sendUpdate("stroke", stroke.value, immediateSwitch.checked);
-                sendUpdate("sensation", sensation.value, immediateSwitch.checked);
-            }
+    function startSocket() {
+      if (!socket || socket.readyState == WebSocket.CLOSED || socket.readyState == WebSocket.CLOSING) {
+        console.log("Page visible and socket not open. Start Connection");
+        reconnectAttempts = 0;
+        if (!StatusMessage.innerHTML.includes("Connecting") && !StatusMessage.innerHTML.includes("Reconnecting")) {
+          initSocket();
+        }
+      }
+    }
 
-            var homeButton = document.getElementById("Home");
-            homeButton.onclick = function() {
-                if (!window.confirm("Are you sure?")) return;
-                sendUpdate("home", 1, false);
-            }
+    function startHeartbeat() {
+      IsAlive = true;
+      clearInterval(heartbeatInterval);
+      heartbeatInterval = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
+    }
 
-            var startButton = document.getElementById("Start");
-            startButton.onclick = function() {
-                if (!window.confirm("Really Start?")) return;
-                sendUpdate("run", 1, false);
-            }
+    // Stop heartbeat
+    function stopHeartbeat() {
+      clearInterval(heartbeatInterval);
+    }
 
-            var stopButton = document.getElementById("Stop");
-            stopButton.onclick = function() {
-                sendUpdate("run", 0, false);
-            }
+    function sendHeartbeat() {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        if (!IsAlive) {
+          StatusMessage.innerHTML = "Disconnected";
+          StateMessage.innerHTML = "Unknown";
+          return;
+        }
+        StatusMessage.innerHTML = "Connected";
+        IsAlive = false;
+        sendUpdate("alive", "check", false);
+      } else {
+        StatusMessage.innerHTML = "Disconnected";
+        StateMessage.innerHTML = "Unknown";
+      }
+    }
 
-            var disableButton = document.getElementById("Disable");
-            disableButton.onclick = function() {
-                sendUpdate("run", 3, false);
-            }
-        </script>
-    </body>
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState == 'visible') {
+        startSocket()
+      }
+    });
+
+    window.onload = function () {
+      if (document.visibilityState == 'visible') {
+        startSocket()
+      }
+    };
+
+    window.addEventListener('beforeunload', () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close(1000, "Page unloading"); // Attempt a clean close
+      }
+    });
+
+    function proccessBatch(data) {
+
+      speedMax.value = data.speedMax;
+      speedMin.value = data.speedMin;
+      speed.setAttribute("max", data.speedMax);
+      speed.setAttribute("min", data.speedMin);
+
+      speed.value = data.speed;
+      speedValue.innerHTML = data.speed;
+
+      depthMax.value = data.depthMax;
+      depthMin.value = data.depthMin;
+      depth.setAttribute("max", data.depthMax);
+      depth.setAttribute("min", data.depthMin);
+
+      depth.value = data.depth;
+      depthValue.innerHTML = data.depth;
+
+      strokeMax.value = data.strokeMax;
+      strokeMin.value = data.strokeMin;
+      stroke.setAttribute("max", data.strokeMax);
+      stroke.setAttribute("min", data.strokeMin);
+
+      stroke.value = data.stroke;
+      strokeValue.innerHTML = data.stroke;
+
+      sensationMax.value = data.sensationMax;
+      sensationMin.value = data.sensationMin;
+      sensation.setAttribute("max", data.sensationMax);
+      sensation.setAttribute("min", data.sensationMin);
+
+      sensation.value = data.sensation;
+      sensationValue.innerHTML = data.sensation;
+
+      patternSelector.value = data.pattern;
+      patternSelector.dispatchEvent(new Event("change"));
+
+      StateMessage.innerHTML = data.state;
+    }
+
+    // Function to send WebSocket message
+    function sendUpdate(type, value, immediate) {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        const message = JSON.stringify({
+          type: type,
+          value: value,
+          immediate: immediate
+        });
+        socket.send(message);
+      }
+    }
+
+    function debounceUpdate(type, value, immediate) {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        sendUpdate(type, value, immediate);
+      }, DEBOUNCE_TIME);
+    }
+
+    speedMax.onchange = function () {
+      speed.setAttribute("max", speedMax.value);
+      debounceUpdate("speedMax", speedMax.value);
+    };
+    speedMin.onchange = function () {
+      speed.setAttribute("min", speedMin.value);
+      debounceUpdate("speedMin", speedMin.value);
+    };
+    speed.oninput = function () {
+      speedValue.innerHTML = this.value;
+      debounceUpdate("speed", this.value, immediateSwitch.checked);
+    };
+
+    depthMax.onchange = function () {
+      depth.setAttribute("max", depthMax.value);
+      debounceUpdate("depthMax", depthMax.value);
+    };
+    depthMin.onchange = function () {
+      depth.setAttribute("min", depthMin.value);
+      debounceUpdate("depthMin", depthMin.value);
+    };
+    depth.oninput = function () {
+      depthValue.innerHTML = this.value;
+      debounceUpdate("depth", this.value, immediateSwitch.checked);
+    };
+
+    strokeMax.onchange = function () {
+      stroke.setAttribute("max", strokeMax.value);
+      debounceUpdate("strokeMax", strokeMax.value);
+    };
+    strokeMin.onchange = function () {
+      stroke.setAttribute("min", strokeMin.value);
+      debounceUpdate("strokeMin", strokeMin.value);
+    };
+    stroke.oninput = function () {
+      strokeValue.innerHTML = this.value;
+      debounceUpdate("stroke", this.value, immediateSwitch.checked);
+    };
+
+    sensationMax.onchange = function () {
+      sensation.setAttribute("max", sensationMax.value);
+      debounceUpdate("sensationMax", sensationMax.value);
+    };
+    sensationMin.onchange = function () {
+      sensation.setAttribute("min", sensationMin.value);
+      debounceUpdate("sensationMin", sensationMin.value);
+    };
+    sensation.oninput = function () {
+      sensationValue.innerHTML = this.value;
+      debounceUpdate("sensation", this.value, immediateSwitch.checked);
+    };
+
+    patternSetButton.onclick = function () {
+      sendUpdate("pattern", patternSelector.value, immediateSwitch.checked);
+      sendUpdate("speed", speed.value, immediateSwitch.checked);
+      sendUpdate("depth", depth.value, immediateSwitch.checked);
+      sendUpdate("stroke", stroke.value, immediateSwitch.checked);
+      sendUpdate("sensation", sensation.value, immediateSwitch.checked);
+
+      sendUpdate("speedMax", speedMax.value, false);
+      sendUpdate("speedMin", speedMin.value, false);
+      sendUpdate("depthMax", depthMax.value, false);
+      sendUpdate("depthMin", depthMin.value, false);
+      sendUpdate("strokeMax", strokeMax.value, false);
+      sendUpdate("strokeMin", strokeMin.value, false);
+      sendUpdate("sensationMax", sensationMax.value, false);
+      sendUpdate("sensationMin", sensationMin.value, false);
+    };
+
+    homeButton.onclick = function () {
+      if (!window.confirm("Are you sure?")) return;
+      sendUpdate("home", 1, false);
+    };
+
+    startButton.onclick = function () {
+      if (!window.confirm("Really Start?")) return;
+      sendUpdate("run", 1, false);
+    };
+
+    stopButton.onclick = function () {
+      sendUpdate("run", 0, false);
+    };
+
+    disableButton.onclick = function () {
+      sendUpdate("run", 3, false);
+    };
+
+    viewFullScreen.onclick = function () {
+      let docElm = document.documentElement;
+      if (docElm.requestFullscreen) {
+        docElm.requestFullscreen().then(() => screen.orientation.lock("portrait"));
+      } else if (docElm.msRequestFullscreen) {
+        docElm.msRequestFullscreen().then(() => screen.orientation.lock("portrait"));
+      } else if (docElm.mozRequestFullScreen) {
+        docElm.mozRequestFullScreen().then(() => screen.orientation.lock("portrait"));
+      } else if (docElm.webkitRequestFullScreen) {
+        docElm.webkitRequestFullScreen().then(() => screen.orientation.lock("portrait"));
+      }
+    };
+
+  </script>
+</body>
+
 </html>

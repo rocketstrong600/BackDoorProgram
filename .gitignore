@@ -5,3 +5,5 @@
 .vscode/ipch
 .platformio
 .venv
+.cache
+.ccls-cache

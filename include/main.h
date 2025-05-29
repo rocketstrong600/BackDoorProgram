@@ -2,7 +2,7 @@
 #define MAIN_H
 
 
-const char* hostname = "jackhammer";
+const char* hostname = "backdoor";
 const char* ssid = "SSID";
 const char* password = "PASSWORD";
 
