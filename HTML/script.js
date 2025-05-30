@@ -2,7 +2,7 @@
 const MAX_RECONNECT_ATTEMPTS = 10;
 const RECONNECT_DELAY = 5000; // 5 seconds
 const DEBOUNCE_TIME = 60; // 60MS
-const HEARTBEAT_INTERVAL = 3000;
+const HEARTBEAT_INTERVAL = 3500;
 
 // -- Document Elements --
 let speed = document.getElementById("speed");
