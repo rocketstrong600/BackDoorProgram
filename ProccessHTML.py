@@ -63,6 +63,12 @@ def ProccessHTMLFiles():
             INPUT_FILE = os.path.join(html_files_path, HTML_FILE)
             OUTPUT_FILE = os.path.join(output_files_path, new_name)
             to_c_array(INPUT_FILE, OUTPUT_FILE, new_name[:-2], True)
+        if filename.endswith(".js"):
+            new_name = filename[:-3]
+            new_name += "_js.h"
+            INPUT_FILE = os.path.join(html_files_path, HTML_FILE)
+            OUTPUT_FILE = os.path.join(output_files_path, new_name)
+            to_c_array(INPUT_FILE, OUTPUT_FILE, new_name[:-2], False)
         if filename.endswith(".der"):
             new_name = filename[:-4]
             new_name += "_cert.h"

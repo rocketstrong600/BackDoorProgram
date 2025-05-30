@@ -3,6 +3,8 @@
 
 #include <WiFi.h>
 
+#include <Preferences.h>
+
 #include <StrokeEngine.h>
 
 #include <ArduinoJson.h>
@@ -16,6 +18,7 @@
 
 
 #include "index_html.h"
+#include "script_js.h"
 
 
 
@@ -57,6 +60,8 @@ StrokeEngine Stroker;
 
 struct mg_mgr mgr;
 
+Preferences settings;
+
 struct UserLimit {
     int min;
     int max;
@@ -71,11 +76,57 @@ struct StrokerUserLimits {
 
 StrokerUserLimits strokerUserLimits;
 
+IPAddress DeviceIP;
+bool APEnabled = false;
+
 void setup() {
     // Start Serial For Debug
     Serial.begin(9600);
-    delay(1000);
+    delay(2000);
 
+    settings.begin("BackdoorMachine", false); 
+    String ssid = settings.getString("ssid", ""); 
+    String password = settings.getString("password", "");
+    settings.end();
+    
+    // Connect To Wifi
+    WiFi.setHostname(hostname);
+
+    Serial.println("Connecting to WiFi (STA Mode)...");
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+
+    unsigned long startTime = millis();
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        if (millis() - startTime > 15000) {
+            Serial.println("\nConnection failed.");
+            WiFi.disconnect(true);
+            delay(500);
+            APEnabled = true;
+            break;
+        }
+    }
+
+    if (!APEnabled) {
+        Serial.println("\nConnected!");
+        Serial.print("IP: ");
+        Serial.println(WiFi.localIP());
+        DeviceIP = WiFi.localIP();
+    } else {
+        Serial.println("Setting up AP Mode...");
+        WiFi.mode(WIFI_AP);
+        WiFi.softAP("Backdoor_Machine");
+        delay(500);
+        Serial.print("IP: ");
+        Serial.println(WiFi.softAPIP());
+        DeviceIP = WiFi.softAPIP();
+    }
+
+
+
+    // Initial User Limits
     strokerUserLimits.speed = {0, 200};
     strokerUserLimits.depth = {0, 200};
     strokerUserLimits.stroke = {0, 200};
@@ -83,40 +134,51 @@ void setup() {
 
     Stroker.begin(&strokingMachine, &servoMotor);
 
-
-    // Connect To Wifi
-    WiFi.setHostname(hostname);
-    WiFi.begin(ssid, password);
-
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(1000);
-        Serial.println("Connecting to WiFi..");
-    }
-
-    
-    Serial.println("Connected to WiFi");
     
     mg_mgr_init(&mgr);
 
     // Create HTTP listener
     mg_http_listen(&mgr, "http://0.0.0.0:80", ev_handler, NULL);
-    pinMode(STEPPER_HOME, INPUT);
+    if (APEnabled) {
+        mg_listen(&mgr, "udp://0.0.0.0:53", ev_handler_dns, NULL);
+    }
 }
 
 void loop() {
-    mg_mgr_poll(&mgr, 5000);
+    mg_mgr_poll(&mgr, 1500);
+}
+
+static bool isIp(const String &str) {
+  for (size_t i = 0; i < str.length(); i++) {
+    int c = str.charAt(i);
+    if (c != '.' && (c < '0' || c > '9')) {
+      return false;
+    }
+  }
+  return true;
 }
 
 void ev_handler(struct mg_connection *c, int ev, void *ev_data) {
     if (ev == MG_EV_HTTP_MSG) {
         struct mg_http_message *hm = (struct mg_http_message *) ev_data;
-        if (mg_match(hm->uri, mg_str("/"), NULL)) {
-            mg_http_reply(c, 200, "Content-Type: text/html\r\n", index_html);
-        } else if (mg_match(hm->uri, mg_str("/ws"), NULL)) {
-            mg_ws_upgrade(c, hm, NULL);
-        }
-         else {
-            mg_http_reply(c, 404, "Content-Type: text/html\r\n", "<h1>Not Found</h1>");
+        struct mg_str *host_header = mg_http_get_header(hm, "Host");
+        String host_addr(host_header->buf, host_header->len);
+
+        if (host_addr.indexOf(F("jackhammer.lan")) >= 0 || isIp(host_addr) || !APEnabled)
+        {
+            if (mg_match(hm->uri, mg_str("/"), NULL)) {
+                mg_http_reply(c, 200, "Content-Type: text/html\r\n", index_html);
+            } else if (mg_match(hm->uri, mg_str("/script.js"), NULL)) {
+                mg_http_reply(c, 200, "Content-Type: text/javascript\r\n", script_js);
+            } else if (mg_match(hm->uri, mg_str("/bmws"), NULL)) {
+                mg_ws_upgrade(c, hm, NULL);
+            } else {
+                mg_http_reply(c, 404, "Content-Type: text/html\r\n", "<h1>Not Found</h1>");
+            }
+        } else {
+            char redirect_header[100];
+            snprintf(redirect_header, sizeof(redirect_header), "Location: http://%s/\r\nContent-Length: 0\r\n", "jackhammer.lan");
+            mg_http_reply(c, 302, redirect_header,"");
         }
     } else if (ev == MG_EV_WS_OPEN) {
         WSConnect(c, ev, ev_data);
@@ -126,6 +188,39 @@ void ev_handler(struct mg_connection *c, int ev, void *ev_data) {
         }
     } else if (ev == MG_EV_WS_MSG) {
         WSMessage(c, ev, ev_data);
+    }
+}
+
+
+
+uint8_t answer[] = {
+    0xc0, 0x0c,          // Point to the name in the DNS question
+    0,    1,             // 2 bytes - record type, A
+    0,    1,             // 2 bytes - address class, INET
+    0,    0,    0, 120,  // 4 bytes - TTL
+    0,    4,             // 2 bytes - address lengthpersistance
+    192,168,4,1          // 4 bytes - IP address
+};
+
+static void ev_handler_dns(struct mg_connection *c, int ev, void *ev_data) {
+    if (ev == MG_EV_OPEN) {
+        //c->is_hexdumping = 1;
+    } else if (ev == MG_EV_READ) {
+    struct mg_dns_rr rr;  // Parse first question, offset 12 is header size
+    size_t n = mg_dns_parse_rr(c->recv.buf, c->recv.len, 12, true, &rr);
+    if (n > 0) {
+        char buf[512];
+        struct mg_dns_header *h = (struct mg_dns_header *) buf;
+        memset(buf, 0, sizeof(buf));  // Clear the whole datagram
+        h->txnid = ((struct mg_dns_header *) c->recv.buf)->txnid;  // Copy tnxid
+        h->num_questions = mg_htons(1);  // We use only the 1st question
+        h->num_answers = mg_htons(1);    // And only one answer
+        h->flags = mg_htons(0x8400);     // Authoritative response
+        memcpy(buf + sizeof(*h), c->recv.buf + sizeof(*h), n);  // Copy question
+        memcpy(buf + sizeof(*h) + n, answer, sizeof(answer));   // And answer
+        mg_send(c, buf, 12 + n + sizeof(answer));               // And send it!
+    }
+    mg_iobuf_del(&c->recv, 0, c->recv.len);
     }
 }
 
@@ -228,28 +323,28 @@ void ProcessCommand(struct mg_connection *c, JsonDocument doc) {
         if (doc["type"] == "speed") {
             float speed = doc["value"];
             bool immediate = doc["immediate"];
-            Stroker.setSpeed(speed, immediate);
+            Stroker.setSpeed(constrain(speed, static_cast<float>(strokerUserLimits.speed.min), static_cast<float>(strokerUserLimits.speed.max)), immediate);
             Serial.printf("Setting Speed: %.2f\n", speed);
         }
 
         if (doc["type"] == "depth") {
             float depth = doc["value"];
             bool immediate = doc["immediate"];
-            Stroker.setDepth(depth, immediate);
+            Stroker.setDepth(constrain(depth, static_cast<float>(strokerUserLimits.depth.min), static_cast<float>(strokerUserLimits.depth.max)), immediate);
             Serial.printf("Setting Depth: %.2f\n", depth);
         }
         
         if (doc["type"] == "stroke") {
             float stroke = doc["value"];
             bool immediate = doc["immediate"];
-            Stroker.setStroke(stroke, immediate);
+            Stroker.setStroke(constrain(stroke, static_cast<float>(strokerUserLimits.stroke.min), static_cast<float>(strokerUserLimits.stroke.max)), immediate);
             Serial.printf("Setting Stroke: %.2f\n", stroke);
         }
 
         if (doc["type"] == "sensation") {
             float sensation = doc["value"];
             bool immediate = doc["immediate"];
-            Stroker.setSensation(sensation, immediate);
+            Stroker.setSensation(constrain(sensation, static_cast<float>(strokerUserLimits.sensation.min), static_cast<float>(strokerUserLimits.sensation.max)), immediate);
             Serial.printf("Setting Sensation: %.2f\n", sensation);
         }
 
@@ -303,6 +398,20 @@ void ProcessCommand(struct mg_connection *c, JsonDocument doc) {
             Stroker.setSpeed(0.5, false);
             Serial.println("Setting Home");
         }
+    }
+
+    if (doc["type"] == "wifiSSID") {
+        String value = doc["value"];
+        settings.begin("BackdoorMachine", false); 
+        settings.putString("ssid", value); 
+        settings.end();
+    }
+
+    if (doc["type"] == "wifiPassword") {
+        String value = doc["value"];
+        settings.begin("BackdoorMachine", false); 
+        settings.putString("password", value); 
+        settings.end();
     }
 
     if (doc["type"] == "alive") {
