@@ -30,7 +30,7 @@ def to_c_array(source, target, name, shrink=False):
 
         # Minify the HTML content if needed
         if shrink:
-            content = minify_html.minify(content, minify_js=True, minify_css=True, remove_processing_instructions=True)
+            content = minify_html.minify(content, minify_js=True, minify_css=True, remove_processing_instructions=True, keep_input_type_text_attr=True)
 
     # Start converting content to a C array
     c_array = f"#include <pgmspace.h>\n\nconst char {name}[] PROGMEM = {{\n"
